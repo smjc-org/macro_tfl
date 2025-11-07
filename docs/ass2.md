@@ -266,7 +266,7 @@ arm_by = armn.
 - `#FREQ(desc) #G1#FREQ(desc)` : 按照合计频数逆向、第一个组别的频数逆向排序。
 - `#G1#FREQ(desc) #G1#TIME(desc)` : 按照第一个组别的频数逆向、第一个组别的频次逆向排序。
 - `#G1#FREQ(desc) #G2#TIME(desc)` : 按照第一个组别的频数逆向、第二个组别的频次逆向排序。
-- `#G1#FREQ(desc) #G1#TIME(desc) #G2#FREQ(asc) #G2#TIME(asc)` : 按照第一个组别的频数逆向、第一个组别的频数正向、第二个组别的频数逆向、第二个组别的频次正向排序。
+- `#G1#FREQ(desc) #G1#TIME(desc) #G2#FREQ(asc) #G2#TIME(asc)` : 按照第一个组别的频数逆向、第一个组别的频次逆向、第二个组别的频数正向、第二个组别的频次正向排序。
 - `#G1#FREQ(desc) #G2#FREQ(asc) #G1#TIME(desc) #G2#TIME(asc)` : 按照第一个组别的频数逆向、第二个组别的频数正向、第一个组别的频次逆向、第二个组别的频次正向排序。
 
 > [!IMPORTANT]
