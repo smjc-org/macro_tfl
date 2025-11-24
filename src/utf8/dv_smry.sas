@@ -43,6 +43,15 @@
     %let format_p                = %upcase(%sysfunc(strip(%bquote(&format_p))));
     %let debug                   = %upcase(%sysfunc(strip(%bquote(&debug))));
 
+    /*检查是否导入宏依赖*/
+    proc sql noprint;
+        create table a as select * from dictionary.catalogs where objname = "QUALIFY_MULTI";
+    quit;
+    %if &sqlobs = 0 %then %do;
+        %put ERROR: 未导入前置依赖 %nrstr(%%)QUALIFY_MULTI !;
+        %goto exit;
+    %end;
+
     /*参数预处理*/
     /*arm*/
     %if %superq(arm) = #NULL %then %do;
