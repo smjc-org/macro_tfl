@@ -486,7 +486,7 @@
                     ifc(not missing(G&i._FREQ_RATE), kstrip(put(G&i._FREQ_RATE, &format_rate)), "-")                as G&i._FREQ_RATE_FMT label = %unquote(%str(%')%superq(arm_&i)-例数率（C）%str(%')),
                     kstrip(put(G&i._FREQ, &format_freq)) || "(" || kstrip(calculated G&i._FREQ_RATE_FMT) || ")"     as G&i._VALUE1        label = %unquote(%str(%')%superq(arm_&i)-例数（率）%str(%')),
                     %if &output_time_rate = TRUE %then %do;
-                        ifc(not missing(G&i._TIME_RATE, kstrip(put(G&i._TIME_RATE, &format_rate)), "-"_             as G&i._TIME_RATE_FMT label = %unquote(%str(%')%superq(arm_&i)-例次率（C）%str(%')) %bquote(,)
+                        ifc(not missing(G&i._TIME_RATE, kstrip(put(G&i._TIME_RATE, &format_rate)), "-")             as G&i._TIME_RATE_FMT label = %unquote(%str(%')%superq(arm_&i)-例次率（C）%str(%')) %bquote(,)
                         kstrip(put(G&i._TIME, &format_freq)) || "(" || kstrip(calculated G&i._TIME_RATE_FMT) || ")" as G&i._VALUE2        label = %unquote(%str(%')%superq(arm_&i)-例次（率）%str(%'))  %bquote(,)
                     %end;
                     %else %do;
