@@ -212,13 +212,13 @@ $$
 假设每个点都能落在线 $y = a + bx$ 上，进而对每个点，都能计算一个截距 $a_i = y_i - bx_i$ ，所有 $a_i$ 从小到大排序，取中位数，即可得到截距 $a$ 的估计值：
 
 $$
-a = \text{median}\{y_i - bx_i\}
+a = \text{median}\left\{y_i - bx_i\right\}
 $$
 
 截距 $a$ 的置信区间为：
 
 $$
-a_L = \text{median}\{y_i - b_Ux_i\}
+a_L = \text{median}\left{y_i - b_Ux_i\right}
 $$
 
 $$
