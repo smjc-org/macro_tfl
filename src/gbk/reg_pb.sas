@@ -2,7 +2,7 @@
  * Macro Name:    reg_pb
  * Macro Purpose: Passing-Bablok »Ø¹é
  * Author:        wtwang
- * Version Date:  2026-03-23
+ * Version Date:  2026-03-24
 */
 
 %macro reg_pb(indata, outdata, x, y, alpha = 0.05, format = 8.4, debug = false) / parmbuff;
