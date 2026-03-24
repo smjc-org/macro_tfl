@@ -180,8 +180,8 @@ $$
 $$
 b =
 \begin{cases}
-S_{\left(\frac{M + 1}{2} + K\right)}, & \text{if } M \text{ is odd} \\
-\frac{1}{2} \cdot \left( S_{\left(\frac{M}{2} + K\right)} + S_{\left(\frac{M}{2} + 1 + K\right)}\right), & \text{if } M \text{ is even} \\
+S_{\left(\frac{M + 1}{2} + K\right)} &,\text{ if } M \text{ is odd} \\
+\frac{1}{2} \cdot \left( S_{\left(\frac{M}{2} + K\right)} + S_{\left(\frac{M}{2} + 1 + K\right)}\right) &,\text{ if } M \text{ is even} \\
 \end{cases}
 $$
 
