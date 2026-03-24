@@ -5,12 +5,13 @@
  * Version Date:  2026-03-23
 */
 
-%macro reg_pb(indata, outdata, x, y, alpha = 0.05, debug = false) / parmbuff;
+%macro reg_pb(indata, outdata, x, y, alpha = 0.05, format = 8.4, debug = false) / parmbuff;
     /*  indata:  数据集名称
      *  outdata: 保存回归分析结果的数据集名称
      *  x:       x 轴变量
      *  y:       y 轴变量
      *  alpha:   双侧显著性水平，默认为 0.05
+     *  format:  统计量输出格式，默认为 8.4
      *  debug:   调试模式
     */
 
@@ -20,7 +21,9 @@
     %let x       = %upcase(%sysfunc(strip(%bquote(&x))));
     %let y       = %upcase(%sysfunc(strip(%bquote(&y))));
     %let alpha   = %sysfunc(strip(%bquote(&alpha)));
+    %let format  = %upcase(%sysfunc(strip(%bquote(&format))));
     %let debug   = %upcase(%sysfunc(strip(%bquote(&debug))));
+
 
     /*复制 indata*/
     data tmp_indata;
@@ -60,7 +63,7 @@
         select count(*) into :M trimmed from tmp_indata_paired;
 
         /*记录对子在序列中的位置*/
-        alter table tmp_indata_paired add seq num(8);
+        alter table tmp_indata_paired add seq num(8) label = "点对子序号";
         update tmp_indata_paired set seq = monotonic();
     quit;
 
@@ -72,13 +75,20 @@
     /*创建存储参数估计值的数据集*/
     proc sql noprint;
         create table tmp_parameter_estimate
-            (param char(20), name char(20), estimate num(8), lower num(8), upper num(8));
+            (param        char(20) label = "参数",
+             desc         char(20) label = "参数描述",
+             estimate     num(8)   label = "估计值",
+             lower        num(8)   label = "下限",
+             upper        num(8)   label = "上限",
+             estimate_fmt char(20) label = "估计值（C）",
+             lower_fmt    char(20) label = "下限（C）",
+             upper_fmt    char(20) label = "上限（C）");
     quit;
 
     /*点估计-斜率*/
     proc sql noprint;
         insert into tmp_parameter_estimate
-            set param = "斜率", name = "slope", estimate = (case when mod(&M, 2) = 1 then (select slope from tmp_indata_paired where seq = (&M + 1)/2 + &K)
+            set param = "slope", desc = "斜率", estimate = (case when mod(&M, 2) = 1 then (select slope from tmp_indata_paired where seq = (&M + 1)/2 + &K)
                                                                  when mod(&M, 2) = 0 then ((select slope from tmp_indata_paired where seq = (&M/2 + &K)) +
                                                                                            (select slope from tmp_indata_paired where seq = (&M/2 + 1 + &K))) / 2
                                                             end);
@@ -90,10 +100,10 @@
             select
                 &x,
                 &y,
-                &y - (select estimate from tmp_parameter_estimate where name = "slope") * &x as intercept_individual
+                &y - (select estimate from tmp_parameter_estimate where param = "slope") * &x as intercept_individual label = "在个体样本上计算的截距"
             from tmp_indata;
         insert into tmp_parameter_estimate
-            set param = "截距", name = "intercept", estimate = (select median(intercept_individual) from tmp_indata_intercept_est);
+            set param = "intercept", desc = "截距", estimate = (select median(intercept_individual) from tmp_indata_intercept_est);
     quit;
 
     /*区间估计-斜率*/
@@ -108,7 +118,7 @@
         update tmp_parameter_estimate
             set lower = (select slope from tmp_indata_paired where seq = &M1 + &K),
                 upper = (select slope from tmp_indata_paired where seq = &M2 + &K)
-            where name = "slope";
+            where param = "slope";
     quit;
 
     /*区间估计-截距*/
@@ -117,14 +127,23 @@
             select
                 &x,
                 &y,
-                &y - (select upper from tmp_parameter_estimate where name = "slope") * &x as intercept_lower_individual,
-                &y - (select lower from tmp_parameter_estimate where name = "slope") * &x as intercept_upper_individual
+                &y - (select upper from tmp_parameter_estimate where param = "slope") * &x as intercept_lower_individual label = "在个体样本上计算的截距下限",
+                &y - (select lower from tmp_parameter_estimate where param = "slope") * &x as intercept_upper_individual label = "在个体样本上计算的截距上限"
             from tmp_indata;
         update tmp_parameter_estimate
             set lower = (select median(intercept_lower_individual) from tmp_indata_intercept_ci_est),
                 upper = (select median(intercept_upper_individual) from tmp_indata_intercept_ci_est)
-            where name = "intercept";
+            where param = "intercept";
     quit;
+
+    /*格式化*/
+    proc sql noprint;
+        update tmp_parameter_estimate
+            set estimate_fmt = put(estimate, &format -L),
+                lower_fmt    = put(lower, &format -L),
+                upper_fmt    = put(upper, &format -L);
+    quit;
+
 
     /*输出数据集*/
     data &outdata;
@@ -146,5 +165,3 @@
     %exit:
     %put NOTE: 宏程序 reg_pb 已结束运行！;
 %mend;
-
-%reg_pb(indata = adeff, outdata = pb_res, x = crcd1, y = trcd1, debug = true);
