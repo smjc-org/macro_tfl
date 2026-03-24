@@ -218,11 +218,8 @@ $$
 截距 $a$ 的置信区间为：
 
 $$
-a_L = \text{median}\left\{y_i - b_Ux_i\right\}
-$$
-
-$$
-a_U = \text{median}\{y_i - b_Lx_i\}
+a_L = \text{median} \lbrace y_i - b_Ux_i \rbrace \\
+a_U = \text{median} \lbrace y_i - b_Lx_i \rbrace
 $$
 
 ## References
