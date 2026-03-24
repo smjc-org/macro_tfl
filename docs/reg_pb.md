@@ -157,7 +157,7 @@ $$
 
 ### 2. 排除不做贡献的点对子
 
-以下两种点对子需要排除，它们对 Passing-Bablok 回归对参数的估计不作贡献。
+以下两种点对子需要排除，它们对 Passing-Bablok 回归的参数估计不作贡献。
 
 - 重合的点对子，即 $x_i = x_j$ 且 $y_i = y_j$ ；
 - 斜率为 -1 的点对子，即 $S_{ij} = -1$ ；
@@ -188,10 +188,10 @@ $$
 ### 5. 估计斜率的置信区间
 
 $$
-C = Z_{1 - \alpha/2} \sqrt{\frac{n(n - 1)(2n + 5)}{18}}
+C = Z_{1 - \frac{\alpha}{2}} \sqrt{\frac{n(n - 1)(2n + 5)}{18}}
 $$
 
-其中 $Z_{1 - \alpha/2}$ 为标准正态分布的 $ 1 - \alpha/2$ 分位数。
+其中 $Z_{1 - \frac{\alpha}{2}}$ 为标准正态分布的 $1 - \alpha/2$ 分位数。
 
 $$
 M_1 = \frac{M - C}{2}, \ \ M_2 = M - M_1 + 1
@@ -218,8 +218,10 @@ $$
 截距 $a$ 的置信区间为：
 
 $$
+\begin{cases}
 a_L = \text{median}\{y_i - b_Ux_i\} \\
 a_U = \text{median}\{y_i - b_Lx_i\}
+\end{cases}
 $$
 
 ## References
